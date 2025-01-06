@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* Prevent overflow on small screens */
+        }
+        h1, h2 {
+            color: #444;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        pre {
+            background: #f4f4f9;
+            padding: 10px;
+            border-left: 3px solid #007bff;
+            overflow-x: auto;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            main {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.2em;
+            }
+            pre {
+                font-size: 0.9em;
+            }
+        }
+        @media (min-width: 601px) and (max-width: 900px) {
+            main {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.75em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Loan Approval Prediction Documentation</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Introduction</h2>
+            <p>
+                Loan approval prediction is a critical task in the financial domain, where institutions assess the risk associated with lending to applicants. This project leverages machine learning techniques to automate and improve the accuracy of loan approval decisions by analyzing applicant data such as income, credit history, and employment status.
+            </p>
+        </section>
+
+        <section>
+            <h2>Overview</h2>
+            <p>
+                This project demonstrates a machine learning pipeline to predict loan approvals based on applicant information. The pipeline includes data preprocessing, feature selection, model training, evaluation, and model persistence.
+            </p>
+        </section>
+        <section>
+            <h2>Feature Selection</h2>
+            <p>
+                Features (X) and the target variable (y) are separated:
+            </p>
+            <ul>
+                <li><strong>Features:</strong> Columns listed above except the target variable.</li>
+                <li><strong>Target:</strong> The variable indicating loan approval (1 for approved, 0 otherwise).</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Train-Test Split</h2>
+            <p>The dataset is split into training and test sets using train_test_split from scikit-learn. Ensure a reasonable split ratio (e.g., 80% for training and 20% for testing).</p>
+            <pre><code>from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)</code></pre>
+        </section>
+
+        <section>
+            <h2>Workflow</h2>
+            <ol>
+                <li><strong>Data Preparation</strong>:
+                    <ul>
+                        <li>Loading data into a Pandas DataFrame. The dataset includes fields like dependents, employment status, income, and credit history.</li>
+                        <li >Separating features (X) and the target variable (y).</li>
+                        <li>Splitting data into training and testing sets.</li>
+                    </ul>
+                </li>
+                <li><strong>Data Analysis</strong>:
+                    <section>
+                        <h2></h2>
+                        <p>Here are some visual insights from the dataset:</p>
+            
+                        <h3>Loan Approval Status by Property Area</h3>
+                        <img src="Screenshot 2025-01-06 124800.png" alt="Loan Approval Status by Property Area">
+            
+                        <h3>Distribution of Loan Amounts</h3>
+                        <img src="Screenshot 2025-01-06 125136.png" alt="Distribution of Loan Amounts">
+            
+                        <h3>Applicant Income vs. Loan Amount by Education Level</h3>
+                        <img src="Screenshot 2025-01-06 125307.png" alt="Applicant Income vs. Loan Amount by Education Level">
+                    </section>
+                    <section> <p> For more detailed analyzing dataset</p></section>
+                    <pre><code>import pandas as pd
+from pandas_profiling import ProfileReport
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')
+
+# Generate profiling report
+profile = ProfileReport(df, title="Data Profiling Report", explorative=True)
+profile.to_file("data_profiling_report.html")</code></pre>
+                </li>
+                <li><strong>Model Building</strong>:
+                    <ul>
+                        <li>Using <strong>RandomForestClassifier</strong> for prediction.</li>
+                        <li>Handling outliers with IQR-based capping.</li>
+                        <li>Training the model:
+                            <pre><code>from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier()
+model.fit(X_train, y_train)</code></pre>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Applying Math</strong>:
+                    <ul>
+                        <li><strong>IQR Calculation:</strong></li>
+                        <ul>
+                            <li>Q1 (25th percentile) and Q3 (75th percentile) are calculated for each column.</li>
+                            <li>IQR = Q3 − Q1</li>
+                            <li>Outlier thresholds:</li>
+                            <ul>
+                                <li>Upper limit = Q3 + 1.5 × IQR</li>
+                                <li>Lower limit = Q1 − 1.5 × IQR</li>
+                            </ul>
+                        </ul>
+                        <li><strong>Capping Outliers:</strong></li>
+                        <ul>
+                            <li>Values above the upper limit are capped at the maximum threshold.</li>
+                            <li>Values below the lower limit are capped at the minimum threshold.</li>
+                        </ul>
+                    </ul>
+                </li>
+                <li><strong>Model Evaluation</strong>:
+                    <pre><code>from sklearn.metrics import accuracy_score
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy:.2f}")</code></pre>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>Accuracy Achieved</h2>
+            <p>The model achieved an accuracy of <b>0.783333</b> on the test dataset. This indicates that the model correctly predicts loan approval status for approximately 78 out of 100 cases in the test data.</p>
+        </section>
+
+        <section>
+            <h2>Future Enhancements</h2>
+            <ul>
+                <li><strong>Feature Engineering:</strong> Include derived features like TotalIncome (sum of ApplicantIncome and CoapplicantIncome).</li>
+                <li><strong>Hyperparameter Tuning:</strong> Use GridSearchCV or RandomizedSearchCV for optimization.</li>
+                <li><strong>Model Comparison:</strong> Experiment with classifiers like LogisticRegression and GradientBoostingClassifier.</li>
+                <li><strong>Cross-Validation:</strong> Apply cross-validation for better model generalization.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>ABOUT</h2>
+            <p>
+                <strong>GitHub:</strong> <a href="https://github.com/varmaManish">https://github.com/varmaManish</a><br>
+                <strong>Portfolio:</strong> <a href="https://varmamanish.github.io/portfolio/">https://varmamanish.github.io/portfolio/</a><br>
+                <strong>Live Project:</strong> <a href="https://loan- approval-prediction-j50e.onrender.com">Loan Approval Prediction</a><br>
+                <strong>Dataset:</strong> <a href="https://www.kaggle.com/datasets/bhavikjikadara/loan-status-prediction">https://www.kaggle.com/datasets/bhavikjikadara/loan-status-prediction</a>
+            </p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Loan Approval Prediction Documentation. All rights reserved.</p>
+    </footer>
+</body>
+</html> 
